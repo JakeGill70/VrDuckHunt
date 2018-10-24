@@ -311,6 +311,46 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
+--- !u!1 &266697558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 266697560}
+  - component: {fileID: 266697559}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: GameManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &266697559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 266697558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ea385e876de3e145928c80a8508a6b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &266697560
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 266697558}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.550293, y: -4.013672, z: 22.671875}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &512647198
 GameObject:
   m_ObjectHideFlags: 0
@@ -450,6 +490,10 @@ Prefab:
       propertyPath: m_TagString
       value: MainCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 1084294246389826, guid: d84d70d0943454d4d9509b79967ffb1d, type: 2}
+      propertyPath: m_TagString
+      value: PcRig
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d84d70d0943454d4d9509b79967ffb1d, type: 2}
   m_IsPrefabParent: 0
@@ -461,7 +505,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 911350678}
-  - component: {fileID: 911350679}
   m_Layer: 0
   m_Name: Target Spawner
   m_TagString: Untagged
@@ -482,20 +525,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &911350679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 911350677}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19e7e41f17a784e48bd6abb176d2a562, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tagSize: 10
-  fileName:
-    name: 10/15/2018 2:36 AM - Run:22c3b8a49c
 --- !u!1 &1216181285
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,6 +744,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2021246612}
+    - target: {fileID: 1775023902999600, guid: 3d0f0fe4dd7301f4baf32c7294f7d2f3, type: 2}
+      propertyPath: m_TagString
+      value: VrRig
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3d0f0fe4dd7301f4baf32c7294f7d2f3, type: 2}
   m_IsPrefabParent: 0

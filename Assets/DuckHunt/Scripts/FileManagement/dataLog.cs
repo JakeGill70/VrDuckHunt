@@ -2,10 +2,16 @@
 
 namespace VrDuckHunt.FileManagement
 {
-    struct dataLog
+    struct DataLog
     {
-        float distance;
-        Vector3 position;
-        Quaternion rotation;
+        public float distance;
+        public Vector3 position;
+        public Quaternion rotation;
+
+        public DataLog( float d, Vector3 pos, Quaternion rot ) {
+            distance = d;
+            position = pos;
+            rotation = rot;
+        }
     }
 }
