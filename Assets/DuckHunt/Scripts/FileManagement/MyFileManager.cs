@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+using System.IO.Compression;
 using VrDuckHunt.FileManagement.Binary;
 using VrDuckHunt.FileManagement.Xml;
 
@@ -10,9 +12,12 @@ namespace VrDuckHunt.FileManagement
     class MyFileManager
     {
         private string sessionName;
+        private string sessionDirectory;
         private TargetData[] targetData;
         private int targetIndex = 0;
         private bool isRecording = false;
+
+        private string sessionLocalDirectory { get { return sessionName + "/"; } }
 
         public MyFileManager(TargetData[] td, bool useColdStart) {
             startSession( td, useColdStart );
@@ -36,6 +41,7 @@ namespace VrDuckHunt.FileManagement
             targetData = td;
             targetIndex = 0;
 
+            prepDirectory();
             prepXML();
             prepBinary();
 
@@ -45,6 +51,21 @@ namespace VrDuckHunt.FileManagement
             }
         }
 
+        public void startSession() {
+            if (!String.IsNullOrEmpty( sessionName ) && targetData != null)
+            {
+                prepDirectory();
+                prepXML();
+                prepBinary();
+                startRecordingData();
+            }
+        }
+
+        private void prepDirectory() {
+            sessionDirectory = Utils.getDataPath() + sessionName;
+            System.IO.Directory.CreateDirectory(sessionDirectory);
+        }
+
         /// <summary>
         /// Creates all necessary binary files.
         /// </summary>
@@ -52,7 +73,7 @@ namespace VrDuckHunt.FileManagement
         {
             for (int i = 0; i < targetData.Length; i++)
             {
-                WriteToBinaryFile.createBinaryFile( targetData[i].fileTag );
+                WriteToBinaryFile.createBinaryFile( sessionLocalDirectory + targetData[i].fileTag );
             }
         }
 
@@ -60,13 +81,13 @@ namespace VrDuckHunt.FileManagement
         /// Creates and populates the XML file
         /// </summary>
         private void prepXML() {
-            WriteToXmlFile.createXmlFile( sessionName );
+            WriteToXmlFile.createXmlFile( sessionLocalDirectory + sessionName );
             WriteToXmlFile.addTargetDataToXML( targetData );
             WriteToXmlFile.closeFile();
         }
 
         public void startRecordingData() {
-            WriteToBinaryFile.beginWriteToBinaryFile( targetData[targetIndex].fileTag );
+            WriteToBinaryFile.beginWriteToBinaryFile( sessionLocalDirectory + targetData[targetIndex].fileTag );
             isRecording = true;
         }
 
@@ -119,5 +140,26 @@ namespace VrDuckHunt.FileManagement
         public string getSessionName() {
             return sessionName;
         }
+
+        public void compressSessionFiles() {
+            GZipStream gzOut = new GZipStream( File.Open( this.sessionDirectory + ".zip", FileMode.OpenOrCreate ), CompressionMode.Compress );
+            DirectoryInfo selectedDirectory = new DirectoryInfo( this.sessionDirectory );
+            StreamWriter sw = new StreamWriter( gzOut );
+
+            foreach (FileInfo file in selectedDirectory.GetFiles())
+            {
+                FileStream sr = file.OpenRead();
+                float val = (float)sr.ReadByte();
+                while (val != -1f)
+                {
+                    sw.Write( val );
+                    val = (float)sr.ReadByte();
+                }
+                sr.Close();
+            }
+            gzOut.Close();
+        }
     }
+
+
 }

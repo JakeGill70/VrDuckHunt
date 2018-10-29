@@ -24,6 +24,7 @@ namespace VrDuckHunt.FileManagement.Binary
         static public void beginWriteToBinaryFile( string fileName ) {
             isCreatingFile = true;
             string fileNameWithPath = Utils.getDataPath() + fileName;
+            Debug.Log( "About to open file: " + fileNameWithPath );
             bwStream = new BinaryWriter( new FileStream( fileNameWithPath, FileMode.Open ) );
         }
 
