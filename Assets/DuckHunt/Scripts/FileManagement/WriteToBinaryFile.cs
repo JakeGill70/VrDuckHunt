@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using UnityEngine;
 
-namespace VrDuckHunt.FileManagement
+namespace VrDuckHunt.FileManagement.Binary
 {
     static class WriteToBinaryFile
     {
@@ -32,6 +33,10 @@ namespace VrDuckHunt.FileManagement
         }
 
         static public void writeToBinaryFile(DataLog data) {
+            if (bwStream == null)
+            {
+                Debug.LogError( "No binary Writer Stream!!" );
+            }
             bwStream.Write( data.distance );
             writeVector3( data.position );
             writeQuaternion( data.rotation );

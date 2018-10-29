@@ -3,7 +3,7 @@ using System.Xml;
 using UnityEngine;
 
 
-namespace VrDuckHunt.FileManagement
+namespace VrDuckHunt.FileManagement.Xml
 {
     public class WriteToXmlFile
     {
