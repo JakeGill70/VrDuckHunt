@@ -13,7 +13,7 @@ public class player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Ray ray = targetCamera.ViewportPointToRay( new Vector2(0.5f, 0.5f) );
-        Debug.DrawRay( ray.origin, ray.direction );
+        //Ray ray = targetCamera.ViewportPointToRay( new Vector2(0.5f, 0.5f) );
+        //Debug.DrawRay( ray.origin, ray.direction );
 	}
 }
