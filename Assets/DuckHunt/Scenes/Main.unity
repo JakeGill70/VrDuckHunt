@@ -151,15 +151,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1301982444378594, guid: 624abaa486b10ab47aeeea3deabc1c94, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114779314632535560, guid: 624abaa486b10ab47aeeea3deabc1c94,
-        type: 2}
-      propertyPath: angularSize
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 624abaa486b10ab47aeeea3deabc1c94, type: 2}
   m_IsPrefabParent: 0
@@ -223,6 +214,7 @@ MonoBehaviour:
   cameraRigs:
   - {fileID: 826079705}
   - {fileID: 937223830}
+  currentTarget: {fileID: 1627668801}
 --- !u!4 &266697560
 Transform:
   m_ObjectHideFlags: 0
@@ -646,6 +638,11 @@ Transform:
   m_Father: {fileID: 134355453}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1627668801 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4330029335678594, guid: 624abaa486b10ab47aeeea3deabc1c94,
+    type: 2}
+  m_PrefabInternal: {fileID: 23529314}
 --- !u!1001 &1678519411
 Prefab:
   m_ObjectHideFlags: 0
