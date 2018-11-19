@@ -20,16 +20,35 @@ public class target : MonoBehaviour {
     // Use this for initialization
     void Start () {
         // Initialize
-        targetCamera = Camera.main;
+        Initialize(angularSize);
+	}
+
+    public void Initialize(float angularSize)
+    {
+        try
+        {
+            targetCamera = gameManager.Instance.getCamera();
+        }
+        catch (System.NullReferenceException)
+        {
+            Debug.LogWarning( "Camera not found during initialization" );
+            return;
+        }
 
         // Adjust scale for distance
+        this.angularSize = angularSize;
         float distance = Vector3.Distance( this.transform.position, targetCamera.transform.position );
         float scale = adjustScale( distance );
         this.transform.localScale = Vector3.one * scale;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update () {
+        if (targetCamera == null)
+        {
+            Start();
+            return;
+        }
         this.transform.LookAt( targetCamera.transform );
 	}
 
@@ -53,7 +72,7 @@ public class target : MonoBehaviour {
         float d = 0f;                               // Distance
         float den = Mathf.Tan( a / 2 ) * 2;         // Calculate denominator of the equation
         d = s / den;                                // Calculate the remainder of the equation
-        return s;
+        return d;
     }
     
 }

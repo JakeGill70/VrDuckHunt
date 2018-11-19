@@ -6,31 +6,65 @@ using VrDuckHunt.FileManagement;
 
 public class gameManager : MonoBehaviour {
 
+
+
     // Manage the camera modes
     public enum CameraMode { PC, VR };
     public CameraMode cameraMode = CameraMode.PC;
     [SerializeField]
     private GameObject[] cameraRigs;
-    private Camera camera;
+    private Camera targetCamera;
 
     // Manage the files
     private MyFileManager fileManager;
     private bool allFilesWrittenTo = false;
 
+    // Manage Targets
+    private GameObject currentTarget;
     [SerializeField]
-    private Transform currentTarget;
-    int carrot;
+    private GameObject targetPrefab;
+    private TargetData[] forrestGump;
+    private int currentTargetIndex = 0;
+
+    public static gameManager Instance;
+
+    
+
+    private void createSingleton() {
+        if (gameManager.Instance == null)
+        {
+            gameManager.Instance = this;
+        }
+        else
+        {
+            if (gameManager.Instance != this)
+            {
+                Destroy( this );
+            }
+        }
+    }
+
+    public Camera getCamera() {
+        return this.targetCamera;
+    }
 
 	// Use this for initialization
 	void Start () {
 
-        activateRig();
-        
-        TargetData[] targetData = generateRandomTargets( 10 );
+        createSingleton();
 
-        fileManager = new MyFileManager( targetData, true );
+        activateRig();
+
+        forrestGump = generateRandomTargets(10);
+
+        fileManager = new MyFileManager( forrestGump, true );
 
         Debug.Log( Application.dataPath );
+
+        createTarget();
+
+
+        Debug.Log( "Start Finished" );
 	}
 
     void activateRig() {
@@ -53,34 +87,76 @@ public class gameManager : MonoBehaviour {
             if (go.tag == rigTag)
             {
                 go.SetActive( true );
+                targetCamera = go.GetComponentInChildren<Camera>();
             }
         }
-
-        // Set the local reference to the camera to the first
-        // camera instance that is active and tagged as "MainCamera"
-        camera = Camera.main;
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (!allFilesWrittenTo)
         {
-            DataLog data = new DataLog( getDistanceFromGaze(), camera.transform.position, camera.transform.rotation );
+            DataLog data = new DataLog( getDistanceFromGaze(), targetCamera.transform.position, targetCamera.transform.rotation );
             fileManager.recordData( data );
         }
         
-        if (gazeCheck() && !allFilesWrittenTo)
+        if ((gazeCheck() && !allFilesWrittenTo))
         {
-            transform.position = transform.position + Vector3.up * 5;
+
             allFilesWrittenTo = !fileManager.nextRecordingData();
             Debug.Log( "HIT!!!" + Time.realtimeSinceStartup.ToString() );
+
+            createTarget();
         }
 	}
+
+    private void createTarget()
+    {
+        // Because destroyTarget() increases the currentTargetIndex, 
+        // it is possible to call this function one too many times
+        // and get an IndexOutOfRange Exception.
+        try
+        {
+            // Get the information from the targetData
+            float distance = forrestGump[currentTargetIndex].distance;
+            float angularSize = forrestGump[currentTargetIndex].angularSize;
+
+            // Psuedo-randomize spawn position
+            Quaternion randAng = Quaternion.Euler( Random.Range( 0, 10 ), Random.Range( -20, 20 ), 0 ); // Randomize angle
+            Vector3 spawnPosition = (Vector3.up * 5) + (randAng * Vector3.forward * distance);
+
+            // Destroy the old target if it exists
+            destroyTarget();
+
+            // Create the new target, update it's angular size, and set it to be the currentTarget
+            currentTarget = GameObject.Instantiate( targetPrefab, spawnPosition, Quaternion.identity ) as GameObject;
+            target currentTargetComponent = currentTarget.GetComponent<target>();
+            currentTargetComponent.Initialize( angularSize );
+
+            Debug.Log( "Target Created." );
+        }
+        catch (System.IndexOutOfRangeException)
+        {
+            // Do Nothing
+            Debug.LogWarning( "Index Out of Range" );
+        }
+
+        
+    }
+
+    private void destroyTarget()
+    {
+        if (currentTarget != null)
+        {
+            currentTargetIndex++;
+            GameObject.Destroy( currentTarget );
+        }
+    }
 
     private bool gazeCheck() {
         
         // Extend the ray to be twice the distance from the partcipant's camera from the current target
-        float distanceToTravel = Vector3.Distance( camera.transform.position, currentTarget.position ) * 2;
+        float distanceToTravel = Vector3.Distance( targetCamera.transform.position, currentTarget.transform.position ) * 2;
 
         // Create the ray
         Ray ray = getCenteredCameraRay();   // Create the "real" ray
@@ -94,15 +170,17 @@ public class gameManager : MonoBehaviour {
     }
 
     private Ray getCenteredCameraRay() {
-        return camera.ViewportPointToRay( new Vector2( 0.5f, 0.5f ) );
+        return targetCamera.ViewportPointToRay( new Vector2( 0.5f, 0.5f ) );
     }
 
     private float getDistanceFromGaze () {
         Ray ray = getCenteredCameraRay();
-        Debug.DrawRay( ray.origin, ray.direction );
-        float distanceToTarget = Vector3.Distance( camera.transform.position, currentTarget.position );
+        Debug.DrawRay( ray.origin, ray.direction, Color.red );
+        Debug.Log( targetCamera == null );
+        Debug.Log( currentTarget == null );
+        float distanceToTarget = Vector3.Distance( targetCamera.transform.position, currentTarget.transform.position );
         Vector3 gazePoint = ray.GetPoint( distanceToTarget );
-        float distanceToGaze = Vector3.Distance( gazePoint, currentTarget.position );
+        float distanceToGaze = Vector3.Distance( gazePoint, currentTarget.transform.position );
         return distanceToGaze;
     }
 

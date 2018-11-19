@@ -3,6 +3,7 @@
     /// <summary>
     /// Meta information about targets, generated at the start of a simulation.
     /// </summary>
+    [System.Serializable]
     public struct TargetData
     {
         public float angularSize;

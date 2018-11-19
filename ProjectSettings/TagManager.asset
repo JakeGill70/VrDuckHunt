@@ -8,6 +8,8 @@ TagManager:
   - VrRig
   - GameManager
   - Target
+  - PcCamera
+  - VrCamera
   layers:
   - Default
   - TransparentFX
