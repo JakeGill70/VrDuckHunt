@@ -23,47 +23,13 @@ namespace VrDuckHunt.FileManagement
             startSession( td, useColdStart );
         }
 
-        public MyFileManager() {
-            sessionName = "Session case #" + Utils.generateTag( 5 );
-            isRecording = false;
-            targetIndex = 0;
-            targetData = null;
-        }
-
         /// <summary>
-        /// Creates the necessary files for data collection.
+        /// Creates a directory for the session
         /// </summary>
-        /// <param name="td">The target data used to generate the files.</param>
-        /// <param name="useColdStart">Yes/No, immediately begin recording data?</param>
-        public void startSession( TargetData[] td, bool useColdStart )
+        private void prepDirectory()
         {
-            sessionName = "Session case #" + Utils.generateTag( 5 );
-            targetData = td;
-            targetIndex = 0;
-
-            prepDirectory();
-            prepXML();
-            prepBinary();
-
-            if (useColdStart)
-            {
-                startRecordingData();
-            }
-        }
-
-        public void startSession() {
-            if (!String.IsNullOrEmpty( sessionName ) && targetData != null)
-            {
-                prepDirectory();
-                prepXML();
-                prepBinary();
-                startRecordingData();
-            }
-        }
-
-        private void prepDirectory() {
             sessionDirectory = Utils.getDataPath() + sessionName;
-            System.IO.Directory.CreateDirectory(sessionDirectory);
+            System.IO.Directory.CreateDirectory( sessionDirectory );
         }
 
         /// <summary>
@@ -80,10 +46,32 @@ namespace VrDuckHunt.FileManagement
         /// <summary>
         /// Creates and populates the XML file
         /// </summary>
-        private void prepXML() {
+        private void prepXML()
+        {
             WriteToXmlFile.createXmlFile( sessionLocalDirectory + sessionName );
             WriteToXmlFile.addTargetDataToXML( targetData );
             WriteToXmlFile.closeFile();
+        }
+
+        /// <summary>
+        /// Creates the necessary files for data collection.
+        /// </summary>
+        /// <param name="td">The target data used to generate the files.</param>
+        /// <param name="useColdStart">Yes/No, immediately begin recording data?</param>
+        public void startSession( TargetData[] td, bool useColdStart )
+        {
+            sessionName = "Session case #" + Utils.generateTag( 5 );
+            targetData = td;
+            targetIndex = 0;
+
+            prepDirectory();    // Make a directory to hold session data
+            prepXML();          // Create and populate XML with the target data
+            prepBinary();       // Creates a binary file foreach target data
+
+            if (useColdStart)
+            {
+                startRecordingData();
+            }
         }
 
         public void startRecordingData() {
@@ -114,6 +102,11 @@ namespace VrDuckHunt.FileManagement
                 return true;
             }
             return false;
+        }
+
+        public int increaseTargetIndex() {
+            targetIndex++;
+            return targetIndex;
         }
 
         public TargetData? getCurrentTarget() {
@@ -160,6 +153,4 @@ namespace VrDuckHunt.FileManagement
             gzOut.Close();
         }
     }
-
-
 }

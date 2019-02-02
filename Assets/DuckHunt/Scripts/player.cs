@@ -8,7 +8,7 @@ public class player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        targetCamera = Camera.main;
+        //targetCamera = Camera.main;
 	}
 	
 	// Update is called once per frame

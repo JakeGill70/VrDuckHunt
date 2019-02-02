@@ -25,9 +25,9 @@ namespace VrDuckHunt.FileManagement.Xml
 
         public static void closeFile()
         {
-            isCreatingFile = false;
             xmlWriter.WriteEndDocument();
             xmlWriter.Close();
+            isCreatingFile = false;
         }
 
         public static void addTargetDataToXML( TargetData[] data)

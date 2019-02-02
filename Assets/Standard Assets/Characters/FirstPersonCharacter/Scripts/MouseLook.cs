@@ -15,7 +15,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         void Start()
         {
-            targetCamera = Camera.main;
+            //targetCamera = Camera.main;
             Vector3 rot = targetCamera.transform.localRotation.eulerAngles;
             rotY = rot.y;
             rotX = rot.x;

@@ -28,19 +28,21 @@ namespace VrDuckHunt.FileManagement.Binary
             bwStream = new BinaryWriter( new FileStream( fileNameWithPath, FileMode.Open ) );
         }
 
-        static public void endWriteToBinaryFile() {
-            bwStream.Close();
-            isCreatingFile = false;
-        }
-
         static public void writeToBinaryFile(DataLog data) {
             if (bwStream == null)
             {
                 Debug.LogError( "No binary Writer Stream!!" );
+                return; 
             }
             bwStream.Write( data.distance );
             writeVector3( data.position );
             writeQuaternion( data.rotation );
+        }
+
+        static public void endWriteToBinaryFile()
+        {
+            bwStream.Close();
+            isCreatingFile = false;
         }
 
         static private void writeVector3( UnityEngine.Vector3 v ) {
